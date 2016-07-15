@@ -123,6 +123,30 @@ export class Editor {
         return false;
     }
 
+    kill(killAgain: boolean = false): void {
+        let range: vscode.Range;
+        range = this.getMouseSelection();
+        if (range == null) {
+            range = this.getMarkSelection();
+        }
+
+        if (range != null) {
+            let item = new Item();
+            item.text = vscode.window.activeTextEditor.document.getText(range);
+            if (killAgain) {
+                this.item.text += item.text;
+            } else {
+                this.item = item;
+            }
+            Editor.delete(range).then(() => {
+                this.setNormalMode();
+            });
+        } else {
+            this.item.text += '\n';
+            this.setNormalMode();
+        }
+    }
+
     copy(): void {
         let range:vscode.Range;
         range = this.getMouseSelection();

@@ -6,6 +6,8 @@ export class Operation {
     private editor: Editor;
     private command_list: { [key: string]: (...args: any[]) => any, thisArgs?: any } = {};
 
+    private previousPoint: Point;
+
     constructor() {
         this.editor = new Editor();
 
@@ -51,16 +53,20 @@ export class Operation {
 
             },
             'C-k': () => {
+                let killAgain = false;
+                if (this.previousPoint) {
+                    killAgain = this.previousPoint.isEqual(this.editor.getMotion().getPoint());
+                }
                 if (!this.editor.getMotion().getPoint().isLineEnd()) {
                     this.editor.setMarkMode();
                     this.editor.getMotion().lineEnd().move();
-                    this.editor.cut();
+                    this.editor.kill(killAgain);
                     this.editor.yank();
                 } else {
                     if (this.editor.getMotion().getPoint().isLineBegin()) {
                         this.editor.deleteLeft();
+                        this.editor.kill();
                     }
-                    this.editor.setNormalMode();
                     this.editor.getStatusBar().init();
                 }
             },
@@ -136,6 +142,8 @@ export class Operation {
                 this.editor.getStatusBar().setText("Triggered Parameter Hints").clear();
             }
         };
+
+        this.previousPoint = null;
     }
 
     getCommand(command_name: string): (...args: any[]) => any {
