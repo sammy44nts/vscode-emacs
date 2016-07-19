@@ -58,6 +58,7 @@ Use `Shift+Insert` to paste from clipboard.
 |--------|--------|------|
 | `C-s` | OK | Search forward |
 | `C-r` | OK | Search backward |
+| `C-M-n` | OK | Add selection to next find match |
 | `C-l` | - | - |
 | `M-x (regex)` | - | - |
 | `M-% (string)` | - | - |
@@ -96,6 +97,7 @@ Use `Shift+Insert` to paste from clipboard.
 | `M-x shell` | - | Start up to the shell |
 | `M-/(dabbrev)` | - | - |
 | `M-num command` | - | - |
+| `C-ESC` | OK | Toggle SideBar visibility |
 
 ### File Command
 |Command | Status | Desc |
@@ -110,13 +112,14 @@ Use `Shift+Insert` to paste from clipboard.
 | `C-x C-b` | - | Create new file and open |
 
 ## Conflicts with default key bindings
+- `ctrl+d`: editor.action.addSelectionToNextFindMatch => **Use `ctrl+alt+n` instead**;
 - `ctrl+g`: workbench.action.gotoLine => **Use `alt+g g` instead**;
-- `ctrl+b`: workbench.action.toggleSidebarVisibility;
+- `ctrl+b`: workbench.action.toggleSidebarVisibility => **Use `ctrl+escape` instead**;
 - `ctrl+space`: toggleSuggestionDetails, editor.action.triggerSuggest;
-- `ctrl+x`: editor.action.clipboardCutAction => **Use `shift+DEL` instead**;
+- `ctrl+x`: editor.action.clipboardCutAction => **Use `shift+delete` instead**;
 - `ctrl+v`: editor.action.clipboardPasteAction => **Use `shift+insert` instead**;
 - `ctrl+k`: editor.debug.action.showDebugHover, editor.action.trimTrailingWhitespace, editor.action.showHover, editor.action.removeCommentLine, editor.action.addCommentLine, editor.action.openDeclarationToTheSide;
 - `ctrl+y`: redo;
 - `ctrl+m`: editor.action.toggleTabFocusMode;
 - `ctrl+/`: editor.action.commentLine => **Use `ctrl+;` instead**;
-- `ctrl+p`: workbench.action.quickOpenNavigateNext.
+- `ctrl+p`: workbench.action.quickOpenNavigateNext => **Use `ctrl+n` instead**.
