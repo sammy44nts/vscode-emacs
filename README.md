@@ -34,14 +34,14 @@ Use `Shift+Insert` to paste from clipboard.
 ### Move command
 |Command | Status | Desc |
 |--------|--------|------|
-| `C-f` | OK | Move to the forward |
-| `C-b` | OK | Move to the backward |
+| `C-f` | OK | Move forward |
+| `C-b` | OK | Move backward |
 | `C-n` | OK | Move to the next line |
 | `C-p` | OK | Move to the previous line |
 | `C-a` | OK | Move to the beginning of line |
 | `C-e` | OK | Move to the end of line |
-| `M-f` | OK | Move to the forward by one word unit |
-| `M-b` | OK | Move to the backward by one word unit |
+| `M-f` | OK | Move forward by one word unit |
+| `M-b` | OK | Move backward by one word unit |
 | `M->` | OK | Move to the end of buffer |
 | `M-<` | OK | Move to the beginning of buffer |
 | `C-v` | OK | Scroll down by one screen unit |
@@ -70,9 +70,9 @@ Use `Shift+Insert` to paste from clipboard.
 | `C-h` | OK | Delete left from point (BS) |
 | `M-d` | OK | Delete word at current position |
 | `C-k` | - | Kill to line end |
-| `C-w` | △ | Kill region |
-| `M-w` | △ | Copy region to kill ring |
-| `C-y` | △ | Yank |
+| `C-w` | OK | Kill region |
+| `M-w` | OK | Copy region to kill ring |
+| `C-y` | OK | Yank |
 | `C-j` | OK | Line Feed |
 | `C-m` | - | Carriage Return |
 | `C-i` | - | Horizontal Tab |

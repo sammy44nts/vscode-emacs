@@ -8,22 +8,8 @@ export class Operation {
         this.editor = new Editor();
         this.commandList = {
             'C-k': () => {
-                let killAgain = false;
-                if (this.previousPoint) {
-                    killAgain = this.previousPoint.isEqual(this.editor.getMotion().getPoint());
-                }
-                if (!this.editor.getMotion().getPoint().isLineEnd()) {
-                    this.editor.setMarkMode();
-                    this.editor.getMotion().lineEnd().move();
-                    this.editor.kill(killAgain);
-                    this.editor.yank();
-                } else {
-                    if (this.editor.getMotion().getPoint().isLineBegin()) {
-                        this.editor.deleteLeft();
-                        this.editor.kill();
-                    }
-                }
-                // this.editor.setNormalMode();
+                this.editor.cursorEndSelect();
+                this.editor.cut();
             },
             'C-w': () => {
                 if (this.editor.cut()) {
@@ -31,7 +17,6 @@ export class Operation {
                 } else {
                     this.editor.setStatusBarMessage("Cut Error!");
                 }
-                // this.editor.setNormalMode();
             },
             'M-w': () => {
                 if (this.editor.copy()) {
@@ -39,13 +24,13 @@ export class Operation {
                 } else {
                     this.editor.setStatusBarMessage("Copy Error!");
                 }
-                // this.editor.setNormalMode();
             },
             'C-y': () => {
-                // this.editor.setNormalMode();
-                this.editor.yank();
-                this.editor.setStatusBarMessage("Yank");
-
+                if(this.editor.yank()) {
+                    this.editor.setStatusBarMessage("Yank");
+                } else {
+                    this.editor.setStatusBarMessage("Kill ring is empty");
+                }
             },
             "C-x_u": () => {
                 this.editor.undo();

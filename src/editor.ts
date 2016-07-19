@@ -1,72 +1,61 @@
 import * as vscode from 'vscode';
-import {KillRing} from './killring';
 
 export class Editor {
-    private killRing: KillRing;
-
-    constructor() {
-        this.killRing = new KillRing;
-    }
+    private killRing: string;
 
     setStatusBarMessage(text: string): vscode.Disposable {
         return vscode.window.setStatusBarMessage(text, 1000);
     }
 
     getSelectionRange(): vscode.Range {
-        let selection = vscode.window.activeTextEditor.selection;
-        let start = selection.start;
-        let end = selection.end;
+        let selection = vscode.window.activeTextEditor.selection,
+            start = selection.start,
+            end = selection.end;
 
-        return (start.character != end.character || start.line != end.line) ? new vscode.Range(start, end) : null;
+        return (start.character !== end.character || start.line !== end.line) ? new vscode.Range(start, end) : null;
     }
 
-    private getSelection(): vscode.Selection {
+    getSelection(): vscode.Selection {
         return vscode.window.activeTextEditor.selection;
     }
 
-    kill(killAgain: boolean = false): void {
-        let range: vscode.Range = this.getSelectionRange();
-        if (range !== null) {
-            let killRing = new KillRing();
-            killRing.text = vscode.window.activeTextEditor.document.getText(range);
-            if (killAgain) {
-                this.killRing.text += killRing.text;
-            } else {
-                this.killRing = killRing;
-            }
-            Editor.delete(range).then(() => {
-                // TODO: this.setNormalMode();
-            });
-        } else {
-            this.killRing.text += '\n';
-        }
+    cursorEndSelect(): void {
+        vscode.commands.executeCommand("cursorEndSelect");
     }
 
-    copy(): boolean {
-        let range: vscode.Range = this.getSelectionRange();
+    copy(range: vscode.Range = null): boolean {
+        this.killRing = undefined;
         if (range === null) {
-            return false;
+            range = this.getSelectionRange();
+            if (range === null) {
+                vscode.commands.executeCommand("emacs.exitMarkMode");
+                return false;
+            }
         }
-        let killRing = new KillRing();
-        killRing.text = vscode.window.activeTextEditor.document.getText(range);
-        this.killRing = killRing;
-        return true;
+        this.killRing = vscode.window.activeTextEditor.document.getText(range);
+        vscode.commands.executeCommand("emacs.exitMarkMode");
+        return this.killRing !== undefined;
     }
 
     cut(): boolean {
         let range: vscode.Range = this.getSelectionRange();
-        if (!this.copy()) {
+
+        if (!this.copy(range)) {
             return false;
         }
         Editor.delete(range);
         return true;
     }
 
-    yank(): void {
-        let text = this.killRing.text;
+    yank(): boolean {
+        if (this.killRing === undefined) {
+            return false;
+        }
+        vscode.commands.executeCommand("emacs.enterMarkMode");
         vscode.window.activeTextEditor.edit(editBuilder => {
-            editBuilder.insert(this.getSelection().active, text);
+            editBuilder.insert(this.getSelection().active, this.killRing);
         });
+        return true;
     }
 
     undo(): void {
