@@ -8,8 +8,7 @@ export class Operation {
         this.editor = new Editor();
         this.commandList = {
             'C-k': () => {
-                this.editor.cursorEndSelect();
-                this.editor.cut();
+                this.editor.kill();
             },
             'C-w': () => {
                 if (this.editor.cut()) {

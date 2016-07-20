@@ -69,7 +69,7 @@ Use `Shift+Insert` to paste from clipboard.
 | `C-d` | OK | Delete right from point (DEL)|
 | `C-h` | OK | Delete left from point (BS) |
 | `M-d` | OK | Delete word at current position |
-| `C-k` | - | Kill to line end |
+| `C-k` | OK | Kill to line end |
 | `C-w` | OK | Kill region |
 | `M-w` | OK | Copy region to kill ring |
 | `C-y` | OK | Yank |
