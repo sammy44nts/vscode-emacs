@@ -41,7 +41,7 @@ export class Editor {
             promises = [
                 vscode.commands.executeCommand("emacs.exitMarkMode"),
                 vscode.commands.executeCommand("cursorEndSelect")
-            ];
+        ];
 
         Promise.all(promises).then(() => {
             let selection = this.getSelection(),
@@ -124,6 +124,38 @@ export class Editor {
 
     undo(): void {
         vscode.commands.executeCommand("undo");
+    }
+
+    private getFirstBlankLine(selection: vscode.Selection): vscode.Selection {
+        let doc = vscode.window.activeTextEditor.document,
+            range: vscode.Range,
+            position: vscode.Position;
+
+        while (selection.isEmpty) {
+            range = doc.getWordRangeAtPosition(selection.start.translate(-1, 0));
+            selection = new vscode.Selection(range.start, range.end);
+        }
+        position = new vscode.Position(range.start.line + 1, 0);
+        return selection = new vscode.Selection(position, position);
+    }
+
+    deleteBlankLines(): void {
+        let promises = [
+                vscode.commands.executeCommand("emacs.exitMarkMode"),
+                vscode.commands.executeCommand("cursorEndSelect")
+        ];
+
+        Promise.all(promises).then(() => {
+            let selection = this.getSelection(),
+                anchor = selection.anchor;
+
+            if (selection.isEmpty) {
+                selection = this.getFirstBlankLine(selection);
+            }
+            // TODO: Remove the blank lines under the current selection
+            vscode.commands.executeCommand("emacs.exitMarkMode");
+            vscode.window.activeTextEditor.selection = new vscode.Selection(anchor, anchor);
+        });
     }
 
     static delete(range: vscode.Range = null): Thenable<boolean> {
