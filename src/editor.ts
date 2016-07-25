@@ -126,37 +126,40 @@ export class Editor {
         vscode.commands.executeCommand("undo");
     }
 
-    private getFirstBlankLine(selection: vscode.Selection): vscode.Selection {
-        let doc = vscode.window.activeTextEditor.document,
-            range: vscode.Range,
-            position: vscode.Position;
+    private getFirstBlankLine(range: vscode.Range): vscode.Range {
+        let doc = vscode.window.activeTextEditor.document;
 
-        while (selection.isEmpty) {
-            range = doc.getWordRangeAtPosition(selection.start.translate(-1, 0));
-            selection = new vscode.Selection(range.start, range.end);
+        range = doc.lineAt(range.start.line - 1).range;
+        console.log("coucou");
+        while (range.start.line > 0 && range.isEmpty) {
+            range = doc.lineAt(range.start.line - 1).range;
         }
-        position = new vscode.Position(range.start.line + 1, 0);
-        return selection = new vscode.Selection(position, position);
+        console.log("coucou0");
+        return range;
     }
 
     deleteBlankLines(): void {
-        let promises = [
-                vscode.commands.executeCommand("emacs.exitMarkMode"),
-                vscode.commands.executeCommand("cursorEndSelect")
-        ];
+        let selection = this.getSelection(),
+            anchor = selection.anchor,
+            doc = vscode.window.activeTextEditor.document,
+            range = doc.lineAt(selection.start.line).range,
+            nextLine: vscode.Position;
 
-        Promise.all(promises).then(() => {
-            let selection = this.getSelection(),
-                anchor = selection.anchor;
-
-            if (selection.isEmpty) {
-                selection = this.getFirstBlankLine(selection);
-            }
-            // TODO: Remove the blank lines under the current selection
-            vscode.commands.executeCommand("emacs.exitMarkMode");
-            vscode.window.activeTextEditor.selection = new vscode.Selection(anchor, anchor);
-        });
-    }
+        if (range.isEmpty) {
+            range = this.getFirstBlankLine(range);
+            anchor = range.start;
+        }
+        nextLine = range.start.translate(1, 0);
+        selection = new vscode.Selection(nextLine, nextLine);
+        vscode.window.activeTextEditor.selection = selection;
+        doc = vscode.window.activeTextEditor.document;
+        console.log("[%d,%d] lineCount: %d", selection.start.line, selection.start.character, doc.lineCount);
+/*        while (doc.lineAt(selection.start.line).range.isEmpty &&
+                doc.lineCount > selection.start.line) {
+            vscode.commands.executeCommand("deleteRight");
+        }
+        vscode.window.activeTextEditor.selection = new vscode.Selection(anchor, anchor);
+*/    }
 
     static delete(range: vscode.Range = null): Thenable<boolean> {
         if (range === null) {
