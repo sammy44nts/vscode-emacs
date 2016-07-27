@@ -33,7 +33,6 @@ export class Operation {
             },
             "C-x_C-o": () => {
                 this.editor.deleteBlankLines();
-                console.log("plop");
             },
             "C-x_u": () => {
                 this.editor.undo();
