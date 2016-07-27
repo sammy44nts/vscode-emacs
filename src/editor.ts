@@ -41,7 +41,7 @@ export class Editor {
             promises = [
                 vscode.commands.executeCommand("emacs.exitMarkMode"),
                 vscode.commands.executeCommand("cursorEndSelect")
-        ];
+            ];
 
         Promise.all(promises).then(() => {
             let selection = this.getSelection(),
