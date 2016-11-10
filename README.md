@@ -1,6 +1,6 @@
-# vscode-emacs
+# Emacs Keymap
 
-This is emacs like plugin for Visual Studio Code.
+This is emacs like behaviour extension for Visual Studio Code.
 
 ## Operation
 Use `Shift+DEL` to cut to clipboard, the `Ctrl+C` is not overridden.
